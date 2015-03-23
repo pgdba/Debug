@@ -2,6 +2,15 @@
 
 namespace Hnk\Debug;
 
+use Hnk\Debug\Config\BaseConfig;
+use Hnk\Debug\Config\ConfigBuilder;
+use Hnk\Debug\Config\ConfigInterface;
+use Hnk\Debug\Context\ContextInterface;
+use Hnk\Debug\Context\ContextResolver;
+use Hnk\Debug\Format\FormatInterface;
+use Hnk\Debug\Format\FormatResolver;
+use Hnk\Debug\Output\OutputInterface;
+use Hnk\Debug\Output\OutputResolver;
 
 /**
  * Class Dumper
@@ -17,16 +26,6 @@ class Dumper
     protected $mode;
 
     /**
-     * @var string
-     */
-    protected $token;
-
-    /**
-     * @var bool
-     */
-    protected $isOptionsBuilded = false;
-
-    /**
      * Options can hold temporary (for one dump) options
      *
      * @var array
@@ -34,28 +33,14 @@ class Dumper
     protected $options = [];
 
     /**
-     * Instance options are set for single Dumper instance
-     *
-     * @var array
+     * @var ConfigInterface 
      */
-    protected $instanceOptions = [];
-
-    /**
-     * Default options, this array contains all available Dumper options
-     *
-     * @var array
-     */
-    protected $defaultOptions = [
-        'showBacktrace' => false,
-        'outputFormat'  => null,
-        'outputMethod'  => null,
-    ];
-
+    protected $config;
+    
     public function __construct()
     {
-
     }
-
+    
     /**
      * Wrapper method
      *
@@ -65,90 +50,125 @@ class Dumper
     public function dump($variable, $name = '')
     {
         $this->beforeDump();
-        /** @var string $context */
-        $context = (new ContextResolver())->getContext();
-        $this->doDump($variable, $name, $context);
+        
+        $contextResolver = new ContextResolver();
+        
+        /** @var ContextInterface $context */
+        $context = $contextResolver->getContext();
+        
+        $outputResolver = new OutputResolver();
+        /** @var OutputInterface $output */
+        $output = $outputResolver->getOutput($this->config);
+        
+        $formatResolver = new FormatResolver();
+        /** @var FormatInterface $format */
+        $format = $formatResolver->getFormat($this->config, $context, $output);
+        
+        $maxDepth = $this->config->getOption('maxDepth');
+        
+        $var = VariableExporter::export($variable, $maxDepth);
+        $backtrace = $this->getBacktrace();
+        
+        $debug = $format->getFormattedVariable($var, $name, $this->config, $backtrace);
+        
+        $output->output($debug, $this->config);
+
         $this->afterDump();
     }
 
     /**
      * @param  string $key
      * @param  mixed  $value
-     * @param  bool   $setAsInstance
+     * @param  bool   $allowReplace
      *
      * @return $this
-     *
-     * @throws \Exception
      */
-    public function setOption($key, $value, $setAsInstance = false)
+    public function setOption($key, $value, $allowReplace = true)
     {
-        if (!array_key_exists($key, $this->defaultOptions)) {
-            throw new \Exception(sprintf('Invalid option %s', $key));
-        }
-
-        if (true === $setAsInstance) {
-            $this->instanceOptions[$key] = $value;
-        } else {
+        if (true === $allowReplace || false === array_key_exists($key, $this->options)) {
             $this->options[$key] = $value;
         }
 
-        $this->isOptionsBuilded = false;
-
         return $this;
     }
-
+    
     /**
-     * @param  string $key
-     *
-     * @return mixed
-     *
-     * @throws \Exception
+     * @param  string $mode
+     * 
+     * @return $this
      */
-    public function getOption($key)
+    public function setMode($mode) 
     {
-        if (!array_key_exists($key, $this->defaultOptions)) {
-            throw new \Exception(sprintf('Invalid option %s', $key));
-        }
-
-        if (false === $this->isOptionsBuilded) {
-            $this->buildOptions();
-        }
-
-        return $this->options[$key];
+        $this->mode = $mode;
+        
+        return $this;
     }
-
+    
     /**
-     * @param mixed  $variable
-     * @param string $name
-     * @param string $context
+     * @return string
      */
-    protected function doDump($variable, $name, $context)
+    public function getMode()
     {
-
+        return $this->mode;
     }
 
-    protected function resolveOutputFormat($context)
+    protected function getBacktrace()
     {
-        if (null !== $this->getOption('outputFormat')) {
-            return $this->getOption('outputFormat');
+        $return = [
+            'invoke' => [
+                'file' => null,
+                'line' => null,
+            ],
+            'trace' => [],
+        ];
+        
+        $backtrace = debug_backtrace();
+        $backtraceCount = count($backtrace);
+        $i = $backtraceCount - 1;
+        $addToTrace = false;
+        $helpers = $this->config->getOption('helpers', []);
+        $helpers[] = sprintf('%s::%s', __CLASS__, 'dump');
+        
+        while ($i > 0) {
+            $class = (isset($backtrace[$i]['class'])) ? $backtrace[$i]['class'] : '';
+            $function = (isset($backtrace[$i]['function'])) ? $backtrace[$i]['function'] : '';
+            $file = (isset($backtrace[$i]['file'])) ? $backtrace[$i]['file'] : '';
+            $line = (isset($backtrace[$i]['line'])) ? $backtrace[$i]['line'] : '';
+            
+            $callable = sprintf(
+                '%s%s',
+                ($class) ? $class.'::' : '',
+                $function
+            );
+            
+            if (false == $addToTrace && in_array($callable, $helpers)) {
+                $addToTrace = true;
+                $return['invoke']['file'] = $file;
+                $return['invoke']['line'] = $line;
+            }
+            
+            if (true === $addToTrace) {
+                $return['trace'][] = [
+                    'class' => $class,
+                    'function' => $function,
+                    'file' => $file,
+                    'line' => $line
+                ];
+            }
+            
+            $i--;
         }
-
-//        if (null !== $this->getOption('outputMethod')) {
-//            return $this->getOption('outputMethod');
-//        }
-
-
+        
+        return $return;
     }
-
+    
+    
     /**
      * Method run before every dump
      */
     protected function beforeDump()
     {
-        if (false === $this->isOptionsBuilded) {
-            $this->buildOptions();
-        }
-
+        $this->buildOptions();
     }
 
     /**
@@ -156,7 +176,6 @@ class Dumper
      */
     protected function afterDump()
     {
-        $this->clearOptions();
     }
 
     /**
@@ -164,20 +183,11 @@ class Dumper
      */
     protected function buildOptions()
     {
-        $this->options = array_merge(
-            $this->defaultOptions,
-            $this->instanceOptions,
-            $this->options
-        );
-        $this->isOptionsBuilded = true;
+        $configBuilder = new ConfigBuilder(BaseConfig::getInstance());
+        
+        $this->setOption('mode', $this->mode);
+        
+        $this->config = $configBuilder->buildConfig($this->options);
     }
 
-    /**
-     * Clears temporary options
-     */
-    protected function clearOptions()
-    {
-        $this->options = [];
-        $this->isOptionsBuilded = false;
-    }
 }
