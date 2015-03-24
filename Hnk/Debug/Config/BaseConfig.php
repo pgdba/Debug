@@ -25,24 +25,7 @@ class BaseConfig implements ConfigInterface
         'debugFile'     => null,
         'maxDepth'      => 5,
     ];
-    
-    /**
-     * @var BaseConfig 
-     */
-    private static $instance = null;
-    
-    /**
-     * @return BaseConfig
-     */
-    public static function getInstance()
-    {
-        if (null === self::$instance) {
-            self::$instance = new BaseConfig();
-        }
-        
-        return self::$instance;
-    }
-    
+
     /**
      * 
      * @param  string $key

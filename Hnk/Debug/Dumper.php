@@ -36,9 +36,15 @@ class Dumper
      * @var ConfigInterface 
      */
     protected $config;
+
+    /**
+     * @var App
+     */
+    protected $app;
     
     public function __construct()
     {
+        $this->app = App::getInstance();
     }
     
     /**
