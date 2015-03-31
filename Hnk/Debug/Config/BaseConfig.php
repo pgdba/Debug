@@ -11,20 +11,20 @@ class BaseConfig implements ConfigInterface
     /**
      * @var array
      */
-    protected $options = [];
+    protected $options = array();
     
     /**
      * Default options, this array contains all available Dumper options
      * 
      * @var array 
      */
-    protected $defaultOptions = [
+    protected $defaultOptions = array(
         'showBacktrace' => false,
         'outputFormat'  => null,
         'outputMethod'  => null,
         'debugFile'     => null,
         'maxDepth'      => 5,
-    ];
+    );
     
     /**
      * @var BaseConfig 

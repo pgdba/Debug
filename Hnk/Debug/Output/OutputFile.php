@@ -2,6 +2,8 @@
 
 namespace Hnk\Debug\Output;
 
+use Hnk\Debug\Config\ConfigInterface;
+
 /**
  * Description of OutputFile
  *
@@ -19,7 +21,7 @@ class OutputFile implements OutputInterface
         
     }
 
-    public function output($debug, \Hnk\Debug\Config\ConfigInterface $config)
+    public function output($debug, ConfigInterface $config)
     {
         
     }

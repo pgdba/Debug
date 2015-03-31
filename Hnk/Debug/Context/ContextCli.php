@@ -29,6 +29,4 @@ class ContextCli implements ContextInterface
     {
         return ('cli' === php_sapi_name());
     }
-
-//put your code here
 }

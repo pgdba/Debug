@@ -11,7 +11,7 @@ use Hnk\Debug\Config\ConfigInterface;
  */
 class OutputResolver
 {
-    public $outputs = [];
+    public $outputs = array();
     
     public function __construct()
     {

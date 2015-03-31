@@ -13,7 +13,7 @@ class FrozenConfig implements ConfigInterface
     /**
      * @var array
      */
-    protected $options = [];
+    protected $options = array();
     
     /**
      * @param array $options

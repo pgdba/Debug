@@ -17,11 +17,11 @@ class FormatHtml implements FormatInterface
     const STYLE_NOTE = 'style_note';
     const STYLE_ERROR = 'style_error';
     
-    protected $styles = [
+    protected $styles = array(
         self::STYLE_DEBUG => 'position: relative; z-index: 999; opacity: 0.8; background-color: gainsboro; border: 1px solid black; padding:5px; margin: 1px;',
         self::STYLE_NOTE => 'background-color: yellowgreen; font-size: 12px; padding: 5px; border: 1px solid black;',
         self::STYLE_ERROR => 'background-color: #ff3300; border: 1px solid black; padding:5px; margin: 1px;'
-    ];
+    );
     
     public function getFormattedVariable($variable, $name, ConfigInterface $config, $backtrace)
     {
@@ -84,10 +84,10 @@ class FormatHtml implements FormatInterface
      */
     public static function getAvailableStyles()
     {
-        return [
+        return array(
             self::STYLE_DEBUG,
             self::STYLE_NOTE,
             self::STYLE_ERROR,
-        ];
+        );
     }
 }

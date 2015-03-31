@@ -30,7 +30,7 @@ class Dumper
      *
      * @var array
      */
-    protected $options = [];
+    protected $options = array();
 
     /**
      * @var ConfigInterface 
@@ -114,19 +114,19 @@ class Dumper
 
     protected function getBacktrace()
     {
-        $return = [
-            'invoke' => [
+        $return = array(
+            'invoke' => array(
                 'file' => null,
                 'line' => null,
-            ],
-            'trace' => [],
-        ];
-        
+            ),
+            'trace' => array()
+        );
+
         $backtrace = debug_backtrace();
         $backtraceCount = count($backtrace);
         $i = $backtraceCount - 1;
         $addToTrace = false;
-        $helpers = $this->config->getOption('helpers', []);
+        $helpers = $this->config->getOption('helpers', array());
         $helpers[] = sprintf('%s::%s', __CLASS__, 'dump');
         
         while ($i > 0) {
@@ -148,12 +148,12 @@ class Dumper
             }
             
             if (true === $addToTrace) {
-                $return['trace'][] = [
+                $return['trace'][] = array(
                     'class' => $class,
                     'function' => $function,
                     'file' => $file,
-                    'line' => $line
-                ];
+                    'line' => $line,
+                );
             }
             
             $i--;

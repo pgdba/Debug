@@ -13,7 +13,7 @@ use Hnk\Debug\Output\OutputInterface;
  */
 class FormatResolver
 {
-    protected $formats = [];
+    protected $formats = array();
     
     public function __construct()
     {
