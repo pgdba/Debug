@@ -7,6 +7,7 @@
  */
 
 namespace Hnk\Debug\Context;
+use Hnk\Debug\Format\FormatFile;
 
 /**
  * Description of ContextCli
@@ -15,14 +16,16 @@ namespace Hnk\Debug\Context;
  */
 class ContextCli implements ContextInterface
 {
+    const CONTEXT = 'cli';
+
     public function getDefaultFormatName()
     {
-        
+        return FormatFile::FORMAT;
     }
 
     public function getName()
     {
-        
+        return self::CONTEXT;
     }
 
     public function supports()

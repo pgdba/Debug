@@ -21,7 +21,7 @@ interface FormatInterface
      * 
      * @param  mixed           $variable
      * @param  string          $name
-     * @param  ConfigInterface $data
+     * @param  ConfigInterface $config
      * @param  array           $backtrace
      * 
      * @return string

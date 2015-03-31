@@ -130,16 +130,18 @@ class Dumper
 
         $backtrace = debug_backtrace();
         $backtraceCount = count($backtrace);
-        $i = $backtraceCount - 1;
+        $i = 0;
         $addToTrace = false;
+
         $helpers = $this->config->getOption('helpers', array());
         $helpers[] = sprintf('%s::%s', __CLASS__, 'dump');
         
-        while ($i > 0) {
-            $class = (isset($backtrace[$i]['class'])) ? $backtrace[$i]['class'] : '';
-            $function = (isset($backtrace[$i]['function'])) ? $backtrace[$i]['function'] : '';
-            $file = (isset($backtrace[$i]['file'])) ? $backtrace[$i]['file'] : '';
-            $line = (isset($backtrace[$i]['line'])) ? $backtrace[$i]['line'] : '';
+        while ($i <= $backtraceCount - 1) {
+
+            $class      = (isset($backtrace[$i]['class'])) ? $backtrace[$i]['class'] : '';
+            $function   = (isset($backtrace[$i]['function'])) ? $backtrace[$i]['function'] : '';
+            $file       = (isset($backtrace[$i]['file'])) ? $backtrace[$i]['file'] : '';
+            $line       = (isset($backtrace[$i]['line'])) ? $backtrace[$i]['line'] : '';
             
             $callable = sprintf(
                 '%s%s',
@@ -147,14 +149,16 @@ class Dumper
                 $function
             );
             
-            if (false == $addToTrace && in_array($callable, $helpers)) {
+            if (in_array($callable, $helpers)) {
                 $addToTrace = true;
+                $return['trace'] = array();
                 $return['invoke']['file'] = $file;
                 $return['invoke']['line'] = $line;
             }
-            
+
             if (true === $addToTrace) {
                 $return['trace'][] = array(
+                    'callable' => $callable,
                     'class' => $class,
                     'function' => $function,
                     'file' => $file,
@@ -162,12 +166,11 @@ class Dumper
                 );
             }
             
-            $i--;
+            $i++;
         }
         
         return $return;
     }
-    
     
     /**
      * Method run before every dump
@@ -189,7 +192,7 @@ class Dumper
      */
     protected function buildOptions()
     {
-        $configBuilder = new ConfigBuilder(BaseConfig::getInstance());
+        $configBuilder = new ConfigBuilder($this->app->getConfig());
         
         $this->setOption('mode', $this->mode);
         

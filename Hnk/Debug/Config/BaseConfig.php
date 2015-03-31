@@ -19,11 +19,14 @@ class BaseConfig implements ConfigInterface
      * @var array 
      */
     protected $defaultOptions = array(
-        'showBacktrace' => false,
-        'outputFormat'  => null,
-        'outputMethod'  => null,
-        'debugFile'     => null,
-        'maxDepth'      => 5,
+        self::OPTION_MODE           => self::MODE_OFF,
+        self::OPTION_HELPERS        => array(),
+        self::OPTION_SHOW_BACKTRACE => false,
+        self::OPTION_OUTPUT_FORMAT  => null,
+        self::OPTION_OUTPUT_METHOD  => null,
+        self::OPTION_DEBUG_FILE     => null,
+        self::OPTION_MAX_DEPTH      => 5,
+        self::OPTION_VERBOSE        => false,
     );
 
     /**
@@ -39,7 +42,28 @@ class BaseConfig implements ConfigInterface
         
         return $this;
     }
-    
+
+    /**
+     * @param  string $key
+     * @param  mixed  $additionalValue
+     *
+     * @throws \Exception
+     */
+    public function addOption($key, $additionalValue)
+    {
+        $optionType = $this->getOptionType($key);
+        if ('array' !== $optionType) {
+            throw new \Exception(sprintf('Option %s is of type %s'));
+        }
+
+        $currentValue = $this->getOption($key, array());
+        if (!is_array($additionalValue)) {
+            $additionalValue = array($additionalValue);
+        }
+
+        $this->setOption($key, array_merge($currentValue, $additionalValue));
+    }
+
     /**
      * @param  string $key
      * @param  mixed  $default
@@ -57,5 +81,37 @@ class BaseConfig implements ConfigInterface
     public function getOptions()
     {
         return array_merge($this->defaultOptions, $this->options);
+    }
+
+    /**
+     * @param  string $key
+     *
+     * @return bool
+     */
+    public function optionExists($key)
+    {
+        return array_key_exists($key, $this->defaultOptions);
+    }
+
+    /**
+     * @param  string $key
+     *
+     * @return string
+     *
+     * @throws \Exception
+     */
+    public function getOptionType($key)
+    {
+        if (!$this->optionExists($key)) {
+            throw new \Exception(sprintf('Option %s does not exist', $key));
+        }
+
+        $type = gettype($this->defaultOptions[$key]);
+
+        if ('NULL' === $type) {
+            $type = 'string'; // @TODO - change this
+        }
+
+        return $type;
     }
 }

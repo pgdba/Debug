@@ -9,13 +9,11 @@ namespace Hnk\Debug\Context;
  */
 class ContextResolver
 {
+    /**
+     * @var ContextInterface[]
+     */
     protected $contexts = array();
-    
-    public function __construct()
-    {
-        $this->contexts[] = new ContextBrowser();
-    }
-    
+
     /**
      * @return ContextInterface
      */
@@ -26,5 +24,13 @@ class ContextResolver
                 return $context;
             }
         }
+    }
+
+    /**
+     * @param ContextInterface $context
+     */
+    public function registerContext(ContextInterface $context)
+    {
+        $this->contexts[$context->getName()] = $context;
     }
 }

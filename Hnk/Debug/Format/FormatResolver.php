@@ -13,13 +13,11 @@ use Hnk\Debug\Output\OutputInterface;
  */
 class FormatResolver
 {
+    /**
+     * @var FormatInterface[]
+     */
     protected $formats = array();
-    
-    public function __construct()
-    {
-        $this->formats[FormatHtml::FORMAT] = new FormatHtml();
-    }
-    
+
     /**
      * 
      * @param  ConfigInterface  $config
@@ -32,8 +30,7 @@ class FormatResolver
         ConfigInterface $config, 
         ContextInterface $context,
         OutputInterface $output
-    )
-    {
+    ) {
         $outputFormat = $config->getOption('outputFormat');
         
         if (null === $outputFormat) {
@@ -48,6 +45,12 @@ class FormatResolver
         
         return $this->formats[$outputFormat];
     }
-    
-    
+
+    /**
+     * @param FormatInterface $format
+     */
+    public function registerFormat(FormatInterface $format)
+    {
+        $this->formats[$format->getName()] = $format;
+    }
 }

@@ -11,12 +11,10 @@ use Hnk\Debug\Config\ConfigInterface;
  */
 class OutputResolver
 {
+    /**
+     * @var OutputInterface[]
+     */
     public $outputs = array();
-    
-    public function __construct()
-    {
-        $this->outputs[OutputBrowser::OUTPUT] = new OutputBrowser();
-    }
     
     /**
      * @param ConfigInterface $config
@@ -25,14 +23,20 @@ class OutputResolver
      */
     public function getOutput(ConfigInterface $config)
     {
-        $outputMethod = $config->getOption('outputMethod', OutputBrowser::OUTPUT);
+        $outputMethod = $config->getOption(ConfigInterface::OPTION_OUTPUT_METHOD, OutputBrowser::OUTPUT);
         
-        foreach ($this->outputs as $output) {
-            if ($output->getName() === $outputMethod) {
-                return $output;
-            }
+        if (array_key_exists($outputMethod, $this->outputs)) {
+            return $this->outputs[$outputMethod];
         }
         
         return $this->outputs[OutputBrowser::OUTPUT];
+    }
+
+    /**
+     * @param OutputInterface $output
+     */
+    public function registerOutput(OutputInterface $output)
+    {
+        $this->outputs[$output->getName()] = $output;
     }
 }

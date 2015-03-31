@@ -22,6 +22,19 @@ interface ConfigInterface
      */
     const MODE_OFF = 'off';
 
+    const OPTION_MODE           = 'mode';
+    const OPTION_HELPERS        = 'helpers';
+    const OPTION_SHOW_BACKTRACE = 'showBacktrace';
+    const OPTION_OUTPUT_FORMAT  = 'outputFormat';
+    const OPTION_OUTPUT_METHOD  = 'outputMethod';
+    const OPTION_DEBUG_FILE     = 'debugFile';
+    const OPTION_MAX_DEPTH      = 'maxDepth';
+    const OPTION_VERBOSE        = 'verbose';
+
+    const OPTION_STYLE_HTML     = 'styleHtml';
+    const OPTION_TOKEN          = 'token';
+
+
     /**
      * @param  string $key
      * @param  mixed  $default

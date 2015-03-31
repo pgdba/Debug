@@ -1,6 +1,7 @@
 <?php
 
 namespace Hnk\Debug\Context;
+use Hnk\Debug\Format\FormatJson;
 
 /**
  * Description of ContextAjax
@@ -9,14 +10,16 @@ namespace Hnk\Debug\Context;
  */
 class ContextAjax implements ContextInterface
 {
+    const CONTEXT = 'ajax';
+
     public function getDefaultFormatName()
     {
-        
+        return FormatJson::FORMAT;
     }
 
     public function getName()
     {
-        
+        return self::CONTEXT;
     }
 
     public function supports()
@@ -26,6 +29,4 @@ class ContextAjax implements ContextInterface
             && $_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest'
         );
     }
-
-//put your code here
 }

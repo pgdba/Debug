@@ -25,9 +25,9 @@ class FormatHtml implements FormatInterface
     
     public function getFormattedVariable($variable, $name, ConfigInterface $config, $backtrace)
     {
-        $style = $config->getOption('style', self::STYLE_DEBUG);
-        $showBacktrace = $config->getOption('showBacktrace', false);
-        $extended = $config->getOption('extended', false);
+        $style = $config->getOption(ConfigInterface::OPTION_STYLE_HTML, self::STYLE_DEBUG);
+        $showBacktrace = $config->getOption(ConfigInterface::OPTION_SHOW_BACKTRACE, false);
+        $extended = $config->getOption(ConfigInterface::OPTION_VERBOSE, false);
         
         if (false === in_array($style, self::getAvailableStyles())) {
             $style = self::STYLE_DEBUG;
@@ -59,11 +59,10 @@ class FormatHtml implements FormatInterface
             $i = 1;
             foreach ($backtrace['trace'] as $trace) {
                 $debug .= sprintf(
-                    '%d %s %s() File: %s %s <br/>', 
+                    '%d %s() File: %s %s <br/>',
                     $i++, 
-                    $trace['class'], 
-                    $trace['function'], 
-                    $trace['file'], 
+                    $trace['callable'],
+                    $trace['file'],
                     $trace['line']
                 );
             }
