@@ -30,7 +30,7 @@ class ConfigBuilder
     public function buildConfig($options)
     {
         if (!is_array($options)) {
-            $options = [];
+            $options = array();
         }
         
         $defaultOptions = $this->config->getOptions();

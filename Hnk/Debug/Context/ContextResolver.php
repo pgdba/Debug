@@ -9,7 +9,7 @@ namespace Hnk\Debug\Context;
  */
 class ContextResolver
 {
-    protected $contexts = [];
+    protected $contexts = array();
     
     public function __construct()
     {
