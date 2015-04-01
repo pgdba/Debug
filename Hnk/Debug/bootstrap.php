@@ -28,18 +28,18 @@ namespace {
     $app = App::getInstance();
 
     // context resolvers
-    $app->getContextResolver()->registerContext(new ContextBrowser());
-    $app->getContextResolver()->registerContext(new ContextAjax());
-    $app->getContextResolver()->registerContext(new ContextCli());
+    $app->getContextFactory()->registerContext(new ContextBrowser());
+    $app->getContextFactory()->registerContext(new ContextAjax());
+    $app->getContextFactory()->registerContext(new ContextCli());
 
     // formats
-    $app->getFormatResolver()->registerFormat(new FormatHtml());
-    $app->getFormatResolver()->registerFormat(new FormatJson());
-    $app->getFormatResolver()->registerFormat(new FormatFile());
+    $app->getFormatFactory()->registerFormat(new FormatHtml());
+    $app->getFormatFactory()->registerFormat(new FormatJson());
+    $app->getFormatFactory()->registerFormat(new FormatFile());
 
     // outputs
-    $app->getOutputResolver()->registerOutput(new OutputBrowser());
-    $app->getOutputResolver()->registerOutput(new OutputFile());
+    $app->getOutputFactory()->registerOutput(new OutputBrowser());
+    $app->getOutputFactory()->registerOutput(new OutputFile());
 
     require_once APP_DIR . '/helpers.php';
 }

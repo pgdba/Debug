@@ -4,9 +4,9 @@ namespace Hnk\Debug;
 
 use Hnk\Debug\Config\BaseConfig;
 use Hnk\Debug\Config\ConfigInterface;
-use Hnk\Debug\Context\ContextResolver;
-use Hnk\Debug\Format\FormatResolver;
-use Hnk\Debug\Output\OutputResolver;
+use Hnk\Debug\Context\ContextFactory;
+use Hnk\Debug\Format\FormatFactory;
+use Hnk\Debug\Output\OutputFactory;
 
 class App
 {
@@ -16,19 +16,19 @@ class App
     protected $config;
 
     /**
-     * @var ContextResolver
+     * @var ContextFactory
      */
-    protected $contextResolver;
+    protected $contextFactory;
 
     /**
-     * @var FormatResolver
+     * @var FormatFactory
      */
-    protected $formatResolver;
+    protected $formatFactory;
 
     /**
-     * @var OutputResolver
+     * @var OutputFactory
      */
-    protected $outputResolver;
+    protected $outputFactory;
 
     /**
      * @var App
@@ -42,10 +42,10 @@ class App
     {
         if (null === self::$instance) {
             self::$instance = new App(
-                new ContextResolver(),
+                new ContextFactory(),
                 new BaseConfig(),
-                new FormatResolver(),
-                new OutputResolver()
+                new FormatFactory(),
+                new OutputFactory()
             );
         }
 
@@ -55,21 +55,21 @@ class App
     /**
      * Construct is protected to allow extending this class
      *
-     * @param ContextResolver $contextResolver
+     * @param ContextFactory $contextFactory
      * @param BaseConfig      $config
-     * @param FormatResolver  $formatResolver
-     * @param OutputResolver  $outputResolver
+     * @param FormatFactory  $formatFactory
+     * @param OutputFactory  $outputFactory
      */
     protected function __construct(
-        ContextResolver $contextResolver,
+        ContextFactory $contextFactory,
         BaseConfig $config,
-        FormatResolver $formatResolver,
-        OutputResolver $outputResolver
+        FormatFactory $formatFactory,
+        OutputFactory $outputFactory
     ) {
-        $this->contextResolver = $contextResolver;
+        $this->contextFactory = $contextFactory;
         $this->config = $config;
-        $this->formatResolver = $formatResolver;
-        $this->outputResolver = $outputResolver;
+        $this->formatFactory = $formatFactory;
+        $this->outputFactory = $outputFactory;
     }
 
     /**
@@ -81,27 +81,27 @@ class App
     }
 
     /**
-     * @return ContextResolver
+     * @return ContextFactory
      */
-    public function getContextResolver()
+    public function getContextFactory()
     {
-        return $this->contextResolver;
+        return $this->contextFactory;
     }
 
     /**
-     * @return FormatResolver
+     * @return FormatFactory
      */
-    public function getFormatResolver()
+    public function getFormatFactory()
     {
-        return $this->formatResolver;
+        return $this->formatFactory;
     }
 
     /**
-     * @return OutputResolver
+     * @return OutputFactory
      */
-    public function getOutputResolver()
+    public function getOutputFactory()
     {
-        return $this->outputResolver;
+        return $this->outputFactory;
     }
 
     /**

@@ -7,11 +7,11 @@ use Hnk\Debug\Context\ContextInterface;
 use Hnk\Debug\Output\OutputInterface;
 
 /**
- * Description of FormatResolver
+ * Description of FormatFactory
  *
  * @author pgdba
  */
-class FormatResolver
+class FormatFactory
 {
     /**
      * @var FormatInterface[]
@@ -31,7 +31,7 @@ class FormatResolver
         ContextInterface $context,
         OutputInterface $output
     ) {
-        $outputFormat = $config->getOption('outputFormat');
+        $outputFormat = $config->getOption(ConfigInterface::OPTION_OUTPUT_FORMAT);
         
         if (null === $outputFormat) {
             $outputFormat = $output->getDefaultFormatName();

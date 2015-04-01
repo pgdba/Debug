@@ -7,7 +7,7 @@ namespace Hnk\Debug\Context;
  *
  * @author pgdba
  */
-class ContextResolver
+class ContextFactory
 {
     /**
      * @var ContextInterface[]

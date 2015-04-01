@@ -5,11 +5,11 @@ namespace Hnk\Debug\Output;
 use Hnk\Debug\Config\ConfigInterface;
 
 /**
- * Description of OutputResolver
+ * Description of OutputFactory
  *
  * @author pgdba
  */
-class OutputResolver
+class OutputFactory
 {
     /**
      * @var OutputInterface[]

@@ -6,11 +6,11 @@ use Hnk\Debug\Config\BaseConfig;
 use Hnk\Debug\Config\ConfigBuilder;
 use Hnk\Debug\Config\ConfigInterface;
 use Hnk\Debug\Context\ContextInterface;
-use Hnk\Debug\Context\ContextResolver;
+use Hnk\Debug\Context\ContextFactory;
 use Hnk\Debug\Format\FormatInterface;
-use Hnk\Debug\Format\FormatResolver;
+use Hnk\Debug\Format\FormatFactory;
 use Hnk\Debug\Output\OutputInterface;
-use Hnk\Debug\Output\OutputResolver;
+use Hnk\Debug\Output\OutputFactory;
 
 /**
  * Class Dumper
@@ -57,16 +57,16 @@ class Dumper
     {
         $this->beforeDump();
         
-        $contextResolver = new ContextResolver();
+        $contextResolver = new ContextFactory();
         
         /** @var ContextInterface $context */
         $context = $contextResolver->getContext();
         
-        $outputResolver = new OutputResolver();
+        $outputResolver = new OutputFactory();
         /** @var OutputInterface $output */
         $output = $outputResolver->getOutput($this->config);
         
-        $formatResolver = new FormatResolver();
+        $formatResolver = new FormatFactory();
         /** @var FormatInterface $format */
         $format = $formatResolver->getFormat($this->config, $context, $output);
         
