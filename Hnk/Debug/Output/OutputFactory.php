@@ -5,8 +5,6 @@ namespace Hnk\Debug\Output;
 use Hnk\Debug\Config\ConfigInterface;
 
 /**
- * Description of OutputFactory
- *
  * @author pgdba
  */
 class OutputFactory
@@ -17,7 +15,7 @@ class OutputFactory
     public $outputs = array();
     
     /**
-     * @param ConfigInterface $config
+     * @param  ConfigInterface $config
      * 
      * @return OutputInterface
      */

@@ -9,7 +9,7 @@ use Hnk\Debug\Config\ConfigInterface;
  *
  * @author pgdba
  */
-class FormatHtml implements FormatInterface
+class FormatHtml extends FormatAbstract
 {
     const FORMAT = 'html';
     
@@ -27,7 +27,6 @@ class FormatHtml implements FormatInterface
     {
         $style = $config->getOption(ConfigInterface::OPTION_STYLE_HTML, self::STYLE_DEBUG);
         $showBacktrace = $config->getOption(ConfigInterface::OPTION_SHOW_BACKTRACE, false);
-        $extended = $config->getOption(ConfigInterface::OPTION_VERBOSE, false);
         
         if (false === in_array($style, self::getAvailableStyles())) {
             $style = self::STYLE_DEBUG;
@@ -46,12 +45,8 @@ class FormatHtml implements FormatInterface
         );
         
         $debug .= '<pre>';
-        
-        if (true === $extended) {
-            $debug .= var_export($variable, true);
-        } else {
-            $debug .= print_r($variable, true);
-        }
+
+        $debug .= $this->dumpVariable($variable, $config);
         
         if ($showBacktrace) {
             $debug .= '<br/><br/>Backtrace:<br/>';
@@ -60,7 +55,7 @@ class FormatHtml implements FormatInterface
             foreach ($backtrace['trace'] as $trace) {
                 $debug .= sprintf(
                     '%d %s() File: %s %s <br/>',
-                    $i++, 
+                    $i++,
                     $trace['callable'],
                     $trace['file'],
                     $trace['line']

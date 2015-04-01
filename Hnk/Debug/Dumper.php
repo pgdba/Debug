@@ -7,7 +7,7 @@ use Hnk\Debug\Config\ConfigBuilder;
 use Hnk\Debug\Config\ConfigInterface;
 use Hnk\Debug\Context\ContextInterface;
 use Hnk\Debug\Context\ContextFactory;
-use Hnk\Debug\Format\FormatInterface;
+use Hnk\Debug\Format\FormatAbstract;
 use Hnk\Debug\Format\FormatFactory;
 use Hnk\Debug\Output\OutputInterface;
 use Hnk\Debug\Output\OutputFactory;
@@ -52,35 +52,30 @@ class Dumper
      *
      * @param mixed  $variable
      * @param string $name
+     *
+     * @return
      */
     public function dump($variable, $name = '')
     {
         $this->beforeDump();
         
-        $contextResolver = new ContextFactory();
-        
-        /** @var ContextInterface $context */
-        $context = $contextResolver->getContext();
-        
-        $outputResolver = new OutputFactory();
-        /** @var OutputInterface $output */
-        $output = $outputResolver->getOutput($this->config);
-        
-        $formatResolver = new FormatFactory();
-        /** @var FormatInterface $format */
-        $format = $formatResolver->getFormat($this->config, $context, $output);
-        
-        $maxDepth = $this->config->getOption('maxDepth');
-        
-        $var = VariableExporter::export($variable, $maxDepth);
+        $context = $this->getContext();
+        $output = $this->getOutput();
+        $format = $this->getFormat($context, $output);
+
+        $var = $this->exportVariable($variable);
+
         $backtrace = $this->getBacktrace();
         
         $debug = $format->getFormattedVariable($var, $name, $this->config, $backtrace);
         
-        $output->output($debug, $this->config);
+        $return = $output->output($debug, $this->config);
 
         $this->afterDump();
+
+        return $return;
     }
+
 
     /**
      * @param  string $key
@@ -96,6 +91,45 @@ class Dumper
         }
 
         return $this;
+    }
+
+    /**
+     * @return ContextInterface
+     */
+    protected function getContext()
+    {
+        return $this->app->getContextFactory()->getContext();
+    }
+
+    /**
+     * @return OutputInterface
+     */
+    protected function getOutput()
+    {
+        return $this->app->getOutputFactory()->getOutput($this->config);
+    }
+
+    /**
+     * @param  ContextInterface $context
+     * @param  OutputInterface  $output
+     *
+     * @return FormatAbstract
+     */
+    protected function getFormat(ContextInterface $context, OutputInterface $output)
+    {
+        return $this->app->getFormatFactory()->getFormat($this->config, $context, $output);
+    }
+
+    /**
+     * @param  mixed $variable
+     *
+     * @return mixed
+     */
+    protected function exportVariable($variable)
+    {
+        $maxDepth = $this->config->getOption(ConfigInterface::OPTION_MAX_DEPTH);
+
+        return VariableExporter::export($variable, $maxDepth);
     }
     
     /**

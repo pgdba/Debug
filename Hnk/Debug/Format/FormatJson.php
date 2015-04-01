@@ -8,7 +8,7 @@ namespace Hnk\Debug\Format;
 
 use Hnk\Debug\Config\ConfigInterface;
 
-class FormatJson implements FormatInterface
+class FormatJson extends FormatAbstract
 {
     const FORMAT = 'json';
 

@@ -14,7 +14,7 @@ use Hnk\Debug\Output\OutputInterface;
 class FormatFactory
 {
     /**
-     * @var FormatInterface[]
+     * @var FormatAbstract[]
      */
     protected $formats = array();
 
@@ -24,7 +24,7 @@ class FormatFactory
      * @param  ContextInterface $context
      * @param  OutputInterface  $output
      * 
-     * @return FormatInterface
+     * @return FormatAbstract
      */
     public function getFormat(
         ConfigInterface $config, 
@@ -47,9 +47,9 @@ class FormatFactory
     }
 
     /**
-     * @param FormatInterface $format
+     * @param FormatAbstract $format
      */
-    public function registerFormat(FormatInterface $format)
+    public function registerFormat(FormatAbstract $format)
     {
         $this->formats[$format->getName()] = $format;
     }

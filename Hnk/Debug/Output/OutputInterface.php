@@ -25,8 +25,10 @@ interface OutputInterface
     public function getDefaultFormatName();
     
     /**
-     * @param string          $debug
-     * @param ConfigInterface $config
+     * @param  string          $debug
+     * @param  ConfigInterface $config
+     *
+     * @return mixed
      */
     public function output($debug, ConfigInterface $config);
 }

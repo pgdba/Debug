@@ -8,7 +8,7 @@ namespace Hnk\Debug\Format;
 
 use Hnk\Debug\Config\ConfigInterface;
 
-class FormatFile implements FormatInterface
+class FormatFile extends FormatAbstract
 {
     const FORMAT = 'file';
 
@@ -39,7 +39,6 @@ class FormatFile implements FormatInterface
     public function getFormattedVariable($variable, $name, ConfigInterface $config, $backtrace)
     {
         $showBacktrace = $config->getOption(ConfigInterface::OPTION_SHOW_BACKTRACE, false);
-        $verbose = $config->getOption(ConfigInterface::OPTION_VERBOSE, false);
 
         // @TODO - format
         $debug = sprintf(
@@ -50,11 +49,7 @@ class FormatFile implements FormatInterface
             $backtrace['invoke']['line'], self::NEW_LINE, self::NEW_LINE
         );
 
-        if ($verbose) {
-            $debug .= var_export($variable, true);
-        } else {
-            $debug .= print_r($variable, true);
-        }
+        $debug .= $this->dumpVariable($variable, $config);
         $debug .= self::NEW_LINE;
 
         if ($showBacktrace) {
