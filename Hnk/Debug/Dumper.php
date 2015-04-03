@@ -21,16 +21,11 @@ use Hnk\Debug\Output\OutputFactory;
 class Dumper
 {
     /**
-     * @var string
-     */
-    protected $mode;
-
-    /**
      * Options can hold temporary (for one dump) options
      *
      * @var array
      */
-    protected $options = array();
+    protected $options = [];
 
     /**
      * @var ConfigInterface 
@@ -50,13 +45,17 @@ class Dumper
     /**
      * Wrapper method
      *
-     * @param mixed  $variable
-     * @param string $name
+     * @param  mixed  $variable
+     * @param  string $name
      *
-     * @return
+     * @return mixed
      */
     public function dump($variable, $name = '')
     {
+        if (ConfigInterface::MODE_OFF === $this->getMode()) {
+            return;
+        }
+
         $this->beforeDump();
         
         $context = $this->getContext();
@@ -76,7 +75,6 @@ class Dumper
         return $return;
     }
 
-
     /**
      * @param  string $key
      * @param  mixed  $value
@@ -91,6 +89,14 @@ class Dumper
         }
 
         return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getMode()
+    {
+        return $this->app->getConfig()->getOption(ConfigInterface::OPTION_MODE);
     }
 
     /**
@@ -131,43 +137,23 @@ class Dumper
 
         return VariableExporter::export($variable, $maxDepth);
     }
-    
-    /**
-     * @param  string $mode
-     * 
-     * @return $this
-     */
-    public function setMode($mode) 
-    {
-        $this->mode = $mode;
-        
-        return $this;
-    }
-    
-    /**
-     * @return string
-     */
-    public function getMode()
-    {
-        return $this->mode;
-    }
 
     protected function getBacktrace()
     {
-        $return = array(
-            'invoke' => array(
+        $return = [
+            'invoke' => [
                 'file' => null,
                 'line' => null,
-            ),
-            'trace' => array()
-        );
+            ],
+            'trace' => []
+        ];
 
         $backtrace = debug_backtrace();
         $backtraceCount = count($backtrace);
         $i = 0;
         $addToTrace = false;
 
-        $helpers = $this->config->getOption('helpers', array());
+        $helpers = $this->config->getOption('helpers', []);
         $helpers[] = sprintf('%s::%s', __CLASS__, 'dump');
         
         while ($i <= $backtraceCount - 1) {
@@ -185,19 +171,19 @@ class Dumper
             
             if (in_array($callable, $helpers)) {
                 $addToTrace = true;
-                $return['trace'] = array();
+                $return['trace'] = [];
                 $return['invoke']['file'] = $file;
                 $return['invoke']['line'] = $line;
             }
 
             if (true === $addToTrace) {
-                $return['trace'][] = array(
+                $return['trace'][] = [
                     'callable' => $callable,
                     'class' => $class,
                     'function' => $function,
                     'file' => $file,
                     'line' => $line,
-                );
+                ];
             }
             
             $i++;

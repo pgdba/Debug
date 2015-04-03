@@ -12,6 +12,8 @@ namespace {
     use Hnk\Debug\Output\OutputBrowser;
     use Hnk\Debug\Output\OutputFile;
 
+    var_dump(getcwd());
+
     define('APP_DIR', __DIR__);
     define('BASE_DIR', dirname(dirname(APP_DIR)));
 
@@ -26,6 +28,12 @@ namespace {
     }
 
     $app = App::getInstance();
+
+    // set mode
+    $app->getConfig()->setOption(ConfigInterface::OPTION_MODE, HNK_DEBUG_MODE);
+
+    // set debug file
+    $app->getConfig()->setOption(ConfigInterface::OPTION_DEBUG_FILE, HNK_DEBUG_MODE);
 
     // context resolvers
     $app->getContextFactory()->registerContext(new ContextBrowser());
