@@ -31,4 +31,12 @@ interface OutputInterface
      * @return mixed
      */
     public function output($debug, ConfigInterface $config);
+
+    /**
+     * Returns true when output should determine format
+     * Returns false when format could be resolved by context
+     *
+     * @return bool
+     */
+    public function isDeterminingFormat();
 }

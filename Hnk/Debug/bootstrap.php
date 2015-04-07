@@ -9,10 +9,8 @@ namespace {
     use Hnk\Debug\Format\FormatFile;
     use Hnk\Debug\Format\FormatHtml;
     use Hnk\Debug\Format\FormatJson;
-    use Hnk\Debug\Output\OutputBrowser;
-    use Hnk\Debug\Output\OutputFile;
-
-    var_dump(getcwd());
+    use Hnk\Debug\Output\OutputEcho;
+    use Hnk\Debug\Output\OutputSave;
 
     define('APP_DIR', __DIR__);
     define('BASE_DIR', dirname(dirname(APP_DIR)));
@@ -33,12 +31,12 @@ namespace {
     $app->getConfig()->setOption(ConfigInterface::OPTION_MODE, HNK_DEBUG_MODE);
 
     // set debug file
-    $app->getConfig()->setOption(ConfigInterface::OPTION_DEBUG_FILE, HNK_DEBUG_MODE);
+    $app->getConfig()->setOption(ConfigInterface::OPTION_DEBUG_FILE, HNK_DEBUG_FILE);
 
     // context resolvers
-    $app->getContextFactory()->registerContext(new ContextBrowser());
     $app->getContextFactory()->registerContext(new ContextAjax());
     $app->getContextFactory()->registerContext(new ContextCli());
+    $app->getContextFactory()->registerContext(new ContextBrowser());
 
     // formats
     $app->getFormatFactory()->registerFormat(new FormatHtml());
@@ -46,8 +44,8 @@ namespace {
     $app->getFormatFactory()->registerFormat(new FormatFile());
 
     // outputs
-    $app->getOutputFactory()->registerOutput(new OutputBrowser());
-    $app->getOutputFactory()->registerOutput(new OutputFile());
+    $app->getOutputFactory()->registerOutput(new OutputEcho());
+    $app->getOutputFactory()->registerOutput(new OutputSave());
 
     require_once APP_DIR . '/helpers.php';
 }

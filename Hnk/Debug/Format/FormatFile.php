@@ -53,6 +53,7 @@ class FormatFile extends FormatAbstract
         $debug .= self::NEW_LINE;
 
         if ($showBacktrace) {
+            $debug .= self::NEW_LINE;
             $i = 1;
             foreach ($backtrace['trace'] as $trace) {
                 $debug .= sprintf(
@@ -66,6 +67,8 @@ class FormatFile extends FormatAbstract
             }
             $debug .= self::NEW_LINE;
         }
+
+        $debug .= self::FILE_LOG_DELIMITER;
 
         return $debug;
     }

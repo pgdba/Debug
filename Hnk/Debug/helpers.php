@@ -4,6 +4,7 @@ namespace {
 
     use Hnk\Debug\Config\ConfigInterface;
     use Hnk\Debug\Dumper;
+    use Hnk\Debug\Output\OutputSave;
 
     function d($var, $name = '')
     {
@@ -16,7 +17,10 @@ namespace {
         $dumper = new Dumper();
         $dumper->setOption(ConfigInterface::OPTION_SHOW_BACKTRACE, true);
         $dumper->dump($var, $name);
-        exit();
+
+        if (ConfigInterface::MODE_DEVELOP === $dumper->getMode()) {
+            exit();
+        }
     }
 
     function fd($var, $name = '', $debugFile = null)
@@ -25,6 +29,7 @@ namespace {
         if (null !== $debugFile) {
             $dumper->setOption(ConfigInterface::OPTION_DEBUG_FILE, $debugFile);
         }
+        $dumper->setOption(ConfigInterface::OPTION_OUTPUT_METHOD, OutputSave::OUTPUT);
         $dumper->dump($var, $name);
     }
 

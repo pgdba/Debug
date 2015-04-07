@@ -33,7 +33,7 @@ class FormatFactory
     ) {
         $outputFormat = $config->getOption(ConfigInterface::OPTION_OUTPUT_FORMAT);
         
-        if (null === $outputFormat) {
+        if (null === $outputFormat && $output->isDeterminingFormat()) {
             $outputFormat = $output->getDefaultFormatName();
         }
         if (null === $outputFormat) {

@@ -8,9 +8,9 @@ use Hnk\Debug\Format\FormatHtml;
 /**
  * @author pgdba
  */
-class OutputBrowser implements OutputInterface
+class OutputEcho implements OutputInterface
 {
-    const OUTPUT = 'browser';
+    const OUTPUT = 'echo';
 
     /**
      * @return string
@@ -37,5 +37,16 @@ class OutputBrowser implements OutputInterface
     public function output($debug, ConfigInterface $config)
     {
         echo $debug;
+    }
+
+    /**
+     * Returns true when output should determine format
+     * Returns false when format could be resolved by context
+     *
+     * @return bool
+     */
+    public function isDeterminingFormat()
+    {
+        return false;
     }
 }

@@ -11,9 +11,9 @@ use Hnk\Debug\Format\FormatFile;
 /**
  * @author pgdba
  */
-class OutputFile implements OutputInterface
+class OutputSave implements OutputInterface
 {
-    const OUTPUT = 'file';
+    const OUTPUT = 'save';
 
     /**
      * @param string          $debug
@@ -28,6 +28,7 @@ class OutputFile implements OutputInterface
         try {
             $debugFile = $this->checkDebugFile($debugFile);
         } catch (DebugFileException $e) {
+            var_dump($debugFile);
             return; // debug is silenced
         }
 
@@ -83,5 +84,16 @@ class OutputFile implements OutputInterface
         }
 
         return $debugFile;
+    }
+
+    /**
+     * Returns true when output should determine format
+     * Returns false when format could be resolved by context
+     *
+     * @return bool
+     */
+    public function isDeterminingFormat()
+    {
+        return true;
     }
 }

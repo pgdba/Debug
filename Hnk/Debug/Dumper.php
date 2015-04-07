@@ -25,7 +25,7 @@ class Dumper
      *
      * @var array
      */
-    protected $options = [];
+    protected $options = array();
 
     /**
      * @var ConfigInterface 
@@ -140,20 +140,20 @@ class Dumper
 
     protected function getBacktrace()
     {
-        $return = [
-            'invoke' => [
+        $return = array(
+            'invoke' => array(
                 'file' => null,
                 'line' => null,
-            ],
-            'trace' => []
-        ];
+            ),
+            'trace' => array()
+        );
 
         $backtrace = debug_backtrace();
         $backtraceCount = count($backtrace);
         $i = 0;
         $addToTrace = false;
 
-        $helpers = $this->config->getOption('helpers', []);
+        $helpers = $this->config->getOption('helpers', array());
         $helpers[] = sprintf('%s::%s', __CLASS__, 'dump');
         
         while ($i <= $backtraceCount - 1) {
@@ -171,19 +171,19 @@ class Dumper
             
             if (in_array($callable, $helpers)) {
                 $addToTrace = true;
-                $return['trace'] = [];
+                $return['trace'] = array();
                 $return['invoke']['file'] = $file;
                 $return['invoke']['line'] = $line;
             }
 
             if (true === $addToTrace) {
-                $return['trace'][] = [
+                $return['trace'][] = array(
                     'callable' => $callable,
                     'class' => $class,
                     'function' => $function,
                     'file' => $file,
                     'line' => $line,
-                ];
+                );
             }
             
             $i++;
@@ -213,9 +213,6 @@ class Dumper
     protected function buildOptions()
     {
         $configBuilder = new ConfigBuilder($this->app->getConfig());
-        
-        $this->setOption('mode', $this->mode);
-        
         $this->config = $configBuilder->buildConfig($this->options);
     }
 

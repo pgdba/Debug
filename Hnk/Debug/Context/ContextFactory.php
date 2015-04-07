@@ -31,6 +31,6 @@ class ContextFactory
      */
     public function registerContext(ContextInterface $context)
     {
-        $this->contexts[$context->getName()] = $context;
+        $this->contexts[] = $context;
     }
 }

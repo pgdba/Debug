@@ -21,13 +21,19 @@ class OutputFactory
      */
     public function getOutput(ConfigInterface $config)
     {
-        $outputMethod = $config->getOption(ConfigInterface::OPTION_OUTPUT_METHOD, OutputBrowser::OUTPUT);
+        $mode = $config->getOption(ConfigInterface::OPTION_MODE);
+
+        if (ConfigInterface::MODE_PRODUCTION === $mode) {
+            $outputMethod = OutputSave::OUTPUT;
+        } else {
+            $outputMethod = $config->getOption(ConfigInterface::OPTION_OUTPUT_METHOD, OutputEcho::OUTPUT);
+        }
         
         if (array_key_exists($outputMethod, $this->outputs)) {
             return $this->outputs[$outputMethod];
         }
         
-        return $this->outputs[OutputBrowser::OUTPUT];
+        return $this->outputs[OutputEcho::OUTPUT];
     }
 
     /**
