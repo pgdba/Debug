@@ -25,7 +25,7 @@ class VariableExporter
                 $return = array();
 
                 foreach ($var as $k => $v) {
-                    $return[$k] = self::exportVariable($v, $maxDepth - 1);
+                    $return[$k] = self::export($v, $maxDepth - 1);
                 }
             } else if ($isObj) {
                 $return = new \stdclass();
@@ -39,14 +39,14 @@ class VariableExporter
 
 
                     if ($var instanceof \ArrayObject || $var instanceof \ArrayIterator) {
-                        $return->__STORAGE__ = self::exportVariable($var->getArrayCopy(), $maxDepth - 1);
+                        $return->__STORAGE__ = self::export($var->getArrayCopy(), $maxDepth - 1);
                     }
 
                     foreach ($reflClass->getProperties() as $reflProperty) {
                         $name = $reflProperty->getName();
 
                         $reflProperty->setAccessible(true);
-                        $return->$name = self::exportVariable($reflProperty->getValue($var), $maxDepth - 1);
+                        $return->$name = self::export($reflProperty->getValue($var), $maxDepth - 1);
                     }
                 }
             } else {

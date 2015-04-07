@@ -39,6 +39,12 @@ namespace {
         $app->getConfig()->setOption(ConfigInterface::OPTION_MAX_DEPTH, $maxDepth);
     }
 
+    function err()
+    {
+        error_reporting(E_ALL);
+        ini_set('display_errors', true);
+    }
+
     function registerHelpers()
     {
         global $app;
