@@ -68,7 +68,7 @@ class FormatFile extends FormatAbstract
             $debug .= self::NEW_LINE;
         }
 
-        $debug .= self::FILE_LOG_DELIMITER;
+        $debug .= self::FILE_LOG_DELIMITER . self::NEW_LINE;
 
         return $debug;
     }
