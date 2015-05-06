@@ -2,6 +2,7 @@
 
 namespace {
 
+    use Hnk\Debug\App;
     use Hnk\Debug\Config\ConfigInterface;
     use Hnk\Debug\Dumper;
     use Hnk\Debug\Output\OutputSave;
@@ -35,7 +36,7 @@ namespace {
 
     function ddd($maxDepth = 5)
     {
-        global $app;
+        $app = App::getInstance();
         $app->getConfig()->setOption(ConfigInterface::OPTION_MAX_DEPTH, $maxDepth);
     }
 
@@ -47,7 +48,7 @@ namespace {
 
     function registerHelpers()
     {
-        global $app;
+        $app = App::getInstance();
         $helpers = array(
             'd',
             'ed',
